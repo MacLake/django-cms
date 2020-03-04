@@ -36,6 +36,7 @@ INSTALL_REQUIREMENTS = [
     'django-sekizai>=0.7',
     'djangocms-admin-style>=1.2',
     'six',
+    'django-fieldsignals>=0.5.0',
 ]
 
 setup(
