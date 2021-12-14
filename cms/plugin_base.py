@@ -9,7 +9,6 @@ from django.contrib import messages
 from django.core.exceptions import (
     ImproperlyConfigured,
     ObjectDoesNotExist,
-    ValidationError,
 )
 from django.utils.encoding import force_str
 from django.utils.html import escapejs
@@ -42,8 +41,7 @@ class CMSPluginBaseMetaclass(forms.MediaDefiningClass):
                 % (new_plugin.model, new_plugin)
             )
         # validate the template:
-        if (not hasattr(new_plugin, 'render_template') and
-                not hasattr(new_plugin, 'get_render_template')):
+        if (not hasattr(new_plugin, 'render_template') and not hasattr(new_plugin, 'get_render_template')):
             raise ImproperlyConfigured(
                 "CMSPluginBase subclasses must have a render_template attribute"
                 " or get_render_template method"
@@ -86,7 +84,7 @@ class CMSPluginBaseMetaclass(forms.MediaDefiningClass):
                 ]
         # Set default name
         if not new_plugin.name:
-            new_plugin.name = re.sub("([a-z])([A-Z])", "\g<1> \g<2>", name)
+            new_plugin.name = re.sub("([a-z])([A-Z])", r"\g<1> \g<2>", name)
 
         # By flagging the plugin class, we avoid having to call these class
         # methods for every plugin all the time.
@@ -163,7 +161,7 @@ class CMSPluginBase(admin.ModelAdmin, metaclass=CMSPluginBaseMetaclass):
             template = None
 
         if not template:
-            raise ValidationError("plugin has no render_template: %s" % self.__class__)
+            raise ImproperlyConfigured("plugin has no render_template: %s" % self.__class__)
         return template
 
     @classmethod
